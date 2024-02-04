@@ -16,13 +16,19 @@ class Player(db.Entity):
   scorecards = Set('Scorecard')
 
 
-  def __init__(self, dictionary: dict):
-    super().__init__(
-      id = int(dictionary['id']) if 'id' in dictionary else int(dictionary['key']),
-      firstName = dictionary['firstName'],
-      lastName = dictionary['lastName'],
-      represents = dictionary['country']['name'],
-      birthDate = dictionary['birthDate']
-      # proDate = dictionary['proDate'],
-      # age = int(dictionary['age']) if dictionary['age'] and any(i.isdigit() for i in dictionary['age']) else None
+  def __init__(self, id, firstName, lastName, represents, birthDate):
+    self.id = id
+    self.firstName = firstName
+    self.lastName = lastName
+    self.represents = represents
+    self.birthDate = birthDate
+
+  @classmethod
+  def serialize(cls, data: dict):
+    cls(
+      id = int(data['id']),
+      firstName = data['firstName'],
+      lastName = data['lastName'],
+      represents = data['country']['name'],
+      birthDate = data['birthDate']
     )

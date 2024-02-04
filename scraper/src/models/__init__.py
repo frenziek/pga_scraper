@@ -31,6 +31,6 @@ def connect_to_sqlite(hard_refresh: bool = False, database_file: str = 'pga.sqli
     if create_db:
         print('Creating new database file...')
 
-    db.bind(provider='sqlite', filename='test.db', create_db=create_db)
+    db.bind(provider='sqlite', filename=f'../../{db_file_path}', create_db=create_db)
     db.generate_mapping(create_tables=True)
 

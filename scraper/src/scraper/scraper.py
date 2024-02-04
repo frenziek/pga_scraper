@@ -36,19 +36,22 @@ def get_players(tour_id: int, http: urllib3.PoolManager):
     players  = []
     if(response.status == 200 and response.data is not None):
         players_list = json.loads(response.data)
-        for player_dictionary in players_list['rankingsList']:
-            play = player_dictionary['player']
-            parse_player(play)
+        for ranking in players_list['rankingsList']:
+            player_dict = ranking['player']
+            parse_player(player_dict)
 
     return players
 
 @db_session
 def parse_player(dictionary: dict):
-    try:
-        player = Player(dictionary)
-        return player
-    except ValueError:
-        print(dictionary)
+    player = Player.get(id=dictionary['id'])
+    
+    if player is None:
+        try:
+            player = Player(dictionary)
+            return player
+        except ValueError:
+            print(dictionary)
     
 
 @db_session
