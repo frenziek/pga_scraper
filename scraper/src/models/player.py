@@ -12,16 +12,17 @@ class Player(db.Entity):
   # representsCountryName in json
   represents = Optional(str)
   proDate = Optional(datetime)
-  age = Optional(int)
+  birthDate = Optional(datetime)
   scorecards = Set('Scorecard')
 
 
   def __init__(self, dictionary: dict):
     super().__init__(
-      id = int(dictionary['golferId']) if 'golferId' in dictionary else int(dictionary['key']),
+      id = int(dictionary['id']) if 'id' in dictionary else int(dictionary['key']),
       firstName = dictionary['firstName'],
       lastName = dictionary['lastName'],
-      represents = dictionary['representsCountryName'],
-      proDate = dictionary['proDate'],
-      age = int(dictionary['age']) if dictionary['age'] and any(i.isdigit() for i in dictionary['age']) else None
+      represents = dictionary['country']['name'],
+      birthDate = dictionary['birthDate']
+      # proDate = dictionary['proDate'],
+      # age = int(dictionary['age']) if dictionary['age'] and any(i.isdigit() for i in dictionary['age']) else None
     )

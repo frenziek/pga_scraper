@@ -1,0 +1,7 @@
+services:
+  scraper:
+    build: ./scraper
+    volumes:
+      - ./scraper:/scraper
+    working_dir: /scraper
+    command: python src/run.py

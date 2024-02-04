@@ -7,7 +7,7 @@ from pony.orm import db_session, commit, count
 
 from models.scorecard import Score, Scorecard
 
-base_url = 'https://www.golfchannel.com/api/v2'
+base_url = 'https://apiweb.owgr.com/api/owgr'
 
 def scrape_years(years, tour_id):
     http = urllib3.PoolManager()
@@ -15,30 +15,30 @@ def scrape_years(years, tour_id):
     players = get_players(tour_id, http)
     print("Got player data...")
 
-    for year in years:
-        print(f'Starting to scrape for {year}...')
-        tournaments = get_tournaments(year, tour_id, http)
-        for tournament in tournaments:
-            if tournament.startDate < datetime.now():
-                with db_session:
-                    scorecards_count = count(s for s in Scorecard if s.tournament.id == tournament.id)
-                    if scorecards_count == 0:         
-                        print(f'Getting data for {tournament.name}...')
-                        get_tournament_data(tournament.id, http)
-        print(f'Got all data for {year}...')
+    # for year in years:
+    #     print(f'Starting to scrape for {year}...')
+    #     tournaments = get_tournaments(year, tour_id, http)
+    #     for tournament in tournaments:
+    #         if tournament.startDate < datetime.now():
+    #             with db_session:
+    #                 scorecards_count = count(s for s in Scorecard if s.tournament.id == tournament.id)
+    #                 if scorecards_count == 0:         
+    #                     print(f'Getting data for {tournament.name}...')
+    #                     get_tournament_data(tournament.id, http)
+    #     print(f'Got all data for {year}...')
 
 @db_session
 def get_players(tour_id: int, http: urllib3.PoolManager):
-    url = f'{base_url}/tours/{tour_id}/golfers'
+    url = f'{base_url}/rankings/getRankings?pageSize=200'
 
     response = http.request("GET", url)
+
     players  = []
     if(response.status == 200 and response.data is not None):
         players_list = json.loads(response.data)
-        for player_dictionary in players_list:
-            player = Player.get(id=player_dictionary['golferId'])
-            if player is None:
-                parse_player(player_dictionary)
+        for player_dictionary in players_list['rankingsList']:
+            play = player_dictionary['player']
+            parse_player(play)
 
     return players
 
