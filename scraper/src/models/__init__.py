@@ -1,7 +1,6 @@
 from .player import Player
-from .course import Course, Club, Hole
 from .tournament import Tournament
-from .scorecard import Scorecard
+from .tournament_scorecard import TournamentScorecard, Score
 from pony.orm import *
 import os
 from datetime import datetime

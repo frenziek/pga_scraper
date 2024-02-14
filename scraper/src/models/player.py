@@ -13,15 +13,17 @@ class Player(db.Entity):
   represents = Optional(str)
   proDate = Optional(datetime)
   birthDate = Optional(datetime)
-  scorecards = Set('Scorecard')
+  scorecards = Set('TournamentScorecard')
 
 
   def __init__(self, id, firstName, lastName, represents, birthDate):
-    self.id = id
-    self.firstName = firstName
-    self.lastName = lastName
-    self.represents = represents
-    self.birthDate = birthDate
+    super().__init__(
+      id = id,
+      firstName = firstName,
+      lastName = lastName,
+      represents = represents,
+      birthDate = birthDate
+    )
 
   @classmethod
   def serialize(cls, data: dict):
